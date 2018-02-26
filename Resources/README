@@ -1,0 +1,106 @@
+// MUSIC EDITOR //
+This is a representation of a MIDI environment. Users can add songs and notes to those songs,
+as well as overlaying songs on one another. Users can also visualize their current environments
+using the showTrack method in the interface.
+
+// Interface: ITrack //
+
+ITrack holds all of the methods for a Track, as well as for Track's extension, MultiTrack.
+
+Methods:
+addNote
+deleteNote
+editNote
+showTrack
+notesInBeat
+
+// Class: Track //
+
+The Track class represents a single song, or series of notes. In a Track, no notes can overlap,
+meaning that no notes may share the same position at any time. Users can use methods to add, edit,
+delete, and visualize notes. This class extends the MultiTrack class, and can be considered for
+both a single song as well as multiple songs overlaid.
+
+Private/Protected Methods:
+noteKey
+notePresent
+validNoteChange
+noteRange
+getOctNum
+getBeatNum
+parseString
+getNumPitch
+
+// Class: MultiTrack //
+
+The MultiTrack class represents multiple songs overlaid on one another. Unlike the Track class,
+MultiTrack allows for overlapping notes, as long as the notes are a part of different individual
+Tracks. The class inherits most of the Track methods, since it extends the Track class. Technically,
+a MultiTrack is a type of a song, although it has a field that contains all of the Tracks to be
+overlaid.
+
+Overridden Methods:
+validNoteChange
+
+// Class: Note //
+
+The Note class represents a single note played within a Track. A note is composed of an octave
+index, pitch, and number of beats long. Notes are constantly being added, deleted, and edited
+within their songs, and can be moved as long as they remain within the song's domain.
+
+Methods:
+toString
+equalsName
+
+// Enum: Pitch //
+The Pitch enum represents all of the different kinds of pitches in a scale. Within the enum lies
+12 distinct pitches, with both an identifier as well as a String representation of the pitch.
+
+Methods:
+reverseLookup
+toString
+
+6/17/2017
+// DESIGN //
+
+CHANGES FROM LAST WEEK'S DESIGN
+
+Since there was a built in Track class we needed to use for our Sequencer, we needed to change
+our Track class to a different name. Now "Song", our model class added new fields: currentBeat
+ and tempo. The tempo comes from the given Song's MIDI file, and the currentBeat changes depending
+ on the beat currently being shown in the view/audio. As the song progresses, this counter
+ will increase. These two fields were essential to add in order to correctly implement the audio
+ view as well as maintaining the MVC format.
+
+ In addition to the extra fields and name change, we added a new class called "Key". This Key
+ class is mapped to a given Note and given a position on the view. This class was really only used
+ for the visual view, but it was much easier to use than to write everything in the text view's
+ initialize method, which was moved from the Song class to the view.
+
+ There were lots of getters that we added to the Song and Note class, in order to return the
+ added fields. In Note, we added instrument and volume, which corresponds to the Song's MIDI txt
+ file.
+
+ ADDITIONAL CLASSES/METHODS
+
+ For this week, we added a new package called "view" that holds all of our additional classes
+ that directly render the views. Inside of view, we divide the package into three smaller packages,
+ one for each specific view. Under the console package, we have a class called "TextView". This
+ class holds the initialize method, as well as all other methods needed to run the view in the
+ console. This class implements the IView interface.
+
+ Under the midi package, we have one class called MidiViewImpl. This is similar to the TextView
+ class; it holds our initialize method as well as other additional methods for the visual view
+ to run. This class also implements the IView interface.
+
+ The third package, visual, includes three classes: GuiViewFrame, KeyboardPanel, and TrackPanel.
+ GuiViewFrame produces the frame of the view, and holds the two panels. The GuiViewFrame also
+ takes in a Song and changes the currentBeat of the Song based on key events. This class also
+ implements IView.
+
+ Within the GuiViewFrame is the TrackPanel and KeyboardPanel classes. These two classes represent
+ the two panels on the frame. The TrackPanel creates the visual composition of the notes on bars,
+ while the KeyboardPanel shows the keyboard with the notes currently being played in orange.
+
+ Outside of the three main packages are five additional classes/interfaces. The ITrackBuilder
+ interface
